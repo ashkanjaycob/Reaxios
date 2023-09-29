@@ -1,50 +1,38 @@
-import { useState } from 'react';
-import './App.css';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import "./App.css";
+import axios from "axios";
 function App() {
+  const [usename, setUsername] = useState("haj Ashkan");
+  const [persons, setPersons] = useState([]);
 
-
-  const [usename, setUsername] = useState("haj Ashkan")
-  const [persons, setPersons] = useState([])
-  const [ShowPers, setShowPers] = useState(false)
-
-  const apiHandler = () => {
-    // Make a request for a user with a given ID
-    return axios.get('https://jsonplaceholder.typicode.com/users')
-      .then(res => {
-        // handle success
-        console.log(res.data[1]);
-        setPersons((pervState) => (pervState = res.data ));
-        console.log(persons);
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((res) => {
+        console.log(res);
+        setPersons(res.data)
       })
-      .catch(err => {
-        // handle error
+      .catch((err) => {
         console.log(err);
       });
-  }
+  },[]);
 
 
   const userupdateHandler = () => {
-    setUsername("Haj Kiddo")
-  }
-
+    setUsername("Haj Kiddo");
+  };
 
   return (
     <div className="App">
       <header className="App-header">
-
         <p>{usename}</p>
-        <br></br>
-        <button onClick={apiHandler}>Show Users</button>
         <br></br>
         <button onClick={userupdateHandler}>Change Name</button>
         {
-          ShowPers &&
-          <p>
-            {
-
-            }
-          </p>
+          persons.length ? 
+          persons.map(item => <h2 key={item.id}>{item.name}</h2>)
+          :
+          <h2>loading ...</h2>
         }
       </header>
     </div>
